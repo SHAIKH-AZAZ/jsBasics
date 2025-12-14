@@ -111,7 +111,7 @@ const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 //   element: row["Element"]
 // }));
 
-const normalizedRows = generateLargeTestData({ rows: 100, maxBars: 10 });
+const normalizedRows = generateLargeTestData({ rows: 1000, maxBars: 10 });
 console.log(normalizedRows);
 
 

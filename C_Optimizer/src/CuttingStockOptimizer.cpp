@@ -5,7 +5,8 @@
 CuttingStockOptimizer::CuttingStockOptimizer(int stockLength, int scrapThreshold)
     : stockLength(stockLength), scrapThreshold(scrapThreshold) {}
 
-int CuttingStockOptimizer::findBestBar(int cut) {
+int CuttingStockOptimizer::findBestBar(int cut)
+{
     BarNode key{cut, -1};
     auto it = barSet.lower_bound(key);
     return (it == barSet.end()) ? -1 : it->index;
@@ -21,6 +22,8 @@ void CuttingStockOptimizer::optimize(const std::vector<Cut> &inputCuts)
                   return a.length > b.length;
               });
 
+    bars.reserve(cuts.size() / 2);
+
     for (const auto &cut : cuts)
     {
         if (cut.length > stockLength)
@@ -30,16 +33,17 @@ void CuttingStockOptimizer::optimize(const std::vector<Cut> &inputCuts)
 
         if (barIndex != -1)
         {
-            auto it = barSet.find({bars[barIndex].remaining, barIndex});
-            if (it != barSet.end())
-                barSet.erase(it);
+            // REMOVE OLD STATE
+            barSet.erase(BarNode{bars[barIndex].remaining, barIndex});
 
+            // UPDATE BAR
             bars[barIndex].cutIds.push_back(cut.id);
             bars[barIndex].remaining -= cut.length;
 
+            // INSERT UPDATED STATE
             if (bars[barIndex].remaining > scrapThreshold)
             {
-                barSet.insert({bars[barIndex].remaining, barIndex});
+                barSet.insert(BarNode{bars[barIndex].remaining, barIndex});
             }
         }
         else
@@ -53,7 +57,7 @@ void CuttingStockOptimizer::optimize(const std::vector<Cut> &inputCuts)
 
             if (bar.remaining > scrapThreshold)
             {
-                barSet.insert({bar.remaining, newIndex});
+                barSet.insert(BarNode{bar.remaining, newIndex});
             }
         }
     }
