@@ -5,10 +5,10 @@
 CuttingStockOptimizer::CuttingStockOptimizer(int stockLength, int scrapThreshold)
     : stockLength(stockLength), scrapThreshold(scrapThreshold) {}
 
-int CuttingStockOptimizer::findBestBar(int cut)
-{
-    auto it = barSet.lower_bound({cut, -1});
-    return (it == barSet.end()) ? -1 : it->second;
+int CuttingStockOptimizer::findBestBar(int cut) {
+    BarNode key{cut, -1};
+    auto it = barSet.lower_bound(key);
+    return (it == barSet.end()) ? -1 : it->index;
 }
 
 void CuttingStockOptimizer::optimize(const std::vector<Cut> &inputCuts)

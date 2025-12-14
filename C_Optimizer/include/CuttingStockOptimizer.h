@@ -17,6 +17,16 @@ struct Bar
     std::vector<int> cutIds;
 };
 
+struct BarNode {
+    int remaining;
+    int index;
+};
+
+struct Compare {
+    bool operator()(const BarNode& a, const BarNode& b) const {
+        return a.remaining < b.remaining;
+    }
+};
 class CuttingStockOptimizer
 {
 public:
@@ -35,7 +45,10 @@ private:
     int scrapThreshold;
 
     std::vector<Bar> bars;
-    std::multiset<std::pair<int, int>> barSet;
+    // std::multiset<std::pair<int, int>> barSet;
+
+
+    std::set<BarNode, Compare> barSet;
 
     int findBestBar(int cut);
 };
