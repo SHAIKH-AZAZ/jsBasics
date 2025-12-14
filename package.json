@@ -1,0 +1,24 @@
+{
+  "name": "dsa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SHAIKH-AZAZ/jsBasics.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/SHAIKH-AZAZ/jsBasics/issues"
+  },
+  "homepage": "https://github.com/SHAIKH-AZAZ/jsBasics#readme",
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
