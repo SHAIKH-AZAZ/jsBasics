@@ -1,11 +1,8 @@
 import XLSX from "xlsx";
-import { execFileSync  , spawn} from "child_process";
+import { execFileSync, spawn } from "child_process";
 
 // ------------------ HELPERS ------------------
-function generateLargeTestData({
-  rows = 2000,
-  maxBars = 50
-}) {
+function generateLargeTestData({ rows = 2000, maxBars = 50 }) {
   const data = [];
 
   for (let i = 1; i <= rows; i++) {
@@ -16,7 +13,7 @@ function generateLargeTestData({
       totalBars: Math.floor(Math.random() * maxBars) + 1,
       cuttingLength: Math.random() * 80 + 5, // 5m–85m
       lapLength: 1.0,
-      element: "Column"
+      element: "Column",
     });
   }
 
@@ -29,15 +26,15 @@ function runCppOptimizerStream(cutsForCpp) {
 
     let output = "";
 
-    proc.stdout.on("data", chunk => {
+    proc.stdout.on("data", (chunk) => {
       output += chunk.toString();
     });
 
-    proc.stderr.on("data", err => {
+    proc.stderr.on("data", (err) => {
       console.error("C++ error:", err.toString());
     });
 
-    proc.on("close", code => {
+    proc.on("close", (code) => {
       if (code !== 0) {
         reject(new Error(`C++ exited with code ${code}`));
       } else {
@@ -45,15 +42,16 @@ function runCppOptimizerStream(cutsForCpp) {
       }
     });
 
-    proc.stdin.write(JSON.stringify({
-      stockLength: 12000,
-      scrapThreshold: 150,
-      cuts: cutsForCpp
-    }));
+    proc.stdin.write(
+      JSON.stringify({
+        stockLength: 12000,
+        scrapThreshold: 150,
+        cuts: cutsForCpp,
+      }),
+    );
     proc.stdin.end();
   });
 }
-
 
 function splitWithLap(cuttingLength, lapLength, stockLength = 12) {
   if (cuttingLength <= stockLength) return [cuttingLength];
@@ -75,23 +73,23 @@ function runCppOptimizer(cutsForCpp) {
   const input = {
     stockLength: 12000,
     scrapThreshold: 150,
-    cuts: cutsForCpp
+    cuts: cutsForCpp,
   };
 
   const result = execFileSync("./build/cutting_stock", {
     input: JSON.stringify(input),
     encoding: "utf-8",
-    maxBuffer: 1024 * 1024 * 100
+    maxBuffer: 1024 * 1024 * 100,
   });
 
   return JSON.parse(result);
 }
 
 function mapResultToExcel(barResults, cutMap) {
-  return barResults.map(bar => ({
+  return barResults.map((bar) => ({
     barNo: bar.barNo,
     remaining: bar.remaining,
-    cuts: bar.cutIds.map(id => cutMap.get(id))
+    cuts: bar.cutIds.map((id) => cutMap.get(id)),
   }));
 }
 
@@ -111,9 +109,8 @@ const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 //   element: row["Element"]
 // }));
 
-const normalizedRows = generateLargeTestData({ rows: 1000, maxBars: 10 });
+const normalizedRows = generateLargeTestData({ rows: 11000, maxBars: 10 });
 console.log(normalizedRows);
-
 
 console.time("TOTAL");
 
@@ -133,7 +130,7 @@ for (const row of normalizedRows) {
         dia: row.dia,
         label: row.label,
         element: row.element,
-        lengthMM: Math.round(segLen * 1000)
+        lengthMM: Math.round(segLen * 1000),
       });
     });
   }
